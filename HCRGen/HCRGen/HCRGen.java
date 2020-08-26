@@ -276,7 +276,7 @@ public class HCRGen extends Application {
 		Label servSchLabel = new Label(" Service Scheduled with: ");
 		Label storeCMLabel = new Label(" Store Closing Manager: ");
 		Label dateOSLabel = new Label(" Date of Service: ");
-		Label serviceELabel = new Label(" Service Every ");
+		Label serviceELabel = new Label(" Service Frequency ");
 		Label timeOSLabel = new Label(" Time of Service: ");
 		TextField servSchTF = new TextField();
 		servSchTF.setMinWidth(205);
@@ -371,7 +371,7 @@ public class HCRGen extends Application {
 		taServ1.setPrefHeight(50);
 		taServ1.setMaxWidth(750);
 
-		Label servLabel7 = new Label(" Notes for Cleaning Technicians: ");
+		Label servLabel7 = new Label(" Notes for cleaning technicians: ");
 		
 		vb2.getChildren().addAll(servLabel7, taServ1);
 		
@@ -422,19 +422,19 @@ public class HCRGen extends Application {
 		mediumLabel.setFont(new Font("Cambria", 10));
 		Label heavyLabel = new Label("Heavy");
 		heavyLabel.setFont(new Font("Cambria", 10));
-		Label dKWLabel = new Label("1. Key Works ");
-		Label fWPLabel = new Label("2. Fans working Pproperly ");
+		Label dKWLabel = new Label("1. Key works ");
+		Label fWPLabel = new Label("2. Fans working properly ");
 		Label dIFWLabel = new Label("3. Defects in fan wiring ");
-		Label aFHLabel = new Label("4. Fans Hinged ");
-		Label fDWLabel = new Label("5. Floor Drains Working ");
-		Label hLWLabel = new Label("6. Hood Lights working ");
-		Label hGPLabel = new Label("7. Hood Globes Present ");
-		Label rTCSLabel = new Label("8. Rooftop Grease Containment System ");
-		Label gBURFLabel = new Label("9. Grease Build-Up around roof fan ");
-		Label gBUFBLabel = new Label("10. Grease Build-Up Fan Blades ");
-		Label gBUSDLabel = new Label("11. Grease Build-Up Stacks/Ductwork ");
-		Label gBUHLabel = new Label("12. Grease Build-Up on Hoods ");
-		Label gBUFiLabel = new Label("13. Grease Build-Up on Filter ");	
+		Label aFHLabel = new Label("4. Fans hinged ");
+		Label fDWLabel = new Label("5. Floor drains working ");
+		Label hLWLabel = new Label("6. Hood lights working ");
+		Label hGPLabel = new Label("7. Hood globes present ");
+		Label rTCSLabel = new Label("8. Rooftop grease containment system ");
+		Label gBURFLabel = new Label("9. Grease build-up around roof fan ");
+		Label gBUFBLabel = new Label("10. Grease build-up fan blades ");
+		Label gBUSDLabel = new Label("11. Grease build-up stacks/ductwork ");
+		Label gBUHLabel = new Label("12. Grease build-up on hoods ");
+		Label gBUFiLabel = new Label("13. Grease build-up on filter ");	
 		
 		ToggleGroup dkW = new ToggleGroup();
 		RadioButton dKWrb1 = new RadioButton();
@@ -606,13 +606,13 @@ public class HCRGen extends Application {
 		Label hIWDLabel = new Label("3. Hood interior wiped dry ");
 		Label kFCEWDLabel = new Label("4. Kitchen floor clean / Equipment wiped down ");
 		Label oARCLabel = new Label("5. Outside area rinsed and clean ");
-		Label hSFPWLabel = new Label("6. Hood, Stack, Fan pressure washed ");
+		Label hSFPWLabel = new Label("6. Hood, stack, fan pressure washed ");
 		Label hDGLLabel = new Label("7. Any horizontal ductwork / give length ");
 		Label aPGQLabel = new Label("8. Any access panels / give quantity ");
-		Label sDWTLabel = new Label("9. Stack / Ductwork water tight ");
+		Label sDWTLabel = new Label("9. Stack / ductwork water tight ");
 		Label pLRLabel = new Label("10. Pilot lights reignited ");
 		Label photoTLabel = new Label("11. Photos taken ");
-		Label hSRLabel = new Label("12. Hood Sticker replaced ");
+		Label hSRLabel = new Label("12. Hood sticker replaced ");
 
 		CheckBox inAccCB = new CheckBox("INACESSIBLE AREAS AND/OR FIRE CODE VIOLATIONS EXIST");
 		inAccCB.setFont(new Font("Cambria", 10));
@@ -781,7 +781,7 @@ public class HCRGen extends Application {
 		~ Acknowledgement box
 	*/
 		//Create the miscellaneous Notes and Acknowledgment Boxes and place them in the grid
-		Label miscNotLabel = new Label("Misc. Notes: All Items Marked NO must have an Explaination");
+		Label miscNotLabel = new Label("Misc. Notes: All items marked no must have an explanation");
 		Label techSigLabel = new Label("Technician:");
 		Label techSigDate = new Label("Date:    	");
 		Label claimLabel = new Label("\nClaims of unsatisfactory workmanship must be made within 48 hours. Invoices are subject to an intrest charge of the lesser of 1.5% per month(18% per year) or the maximum rate allowed by law on any unpaid invoices outstanding after 30 days from date of service. The Customer herby waives thier rights of subrogation by thier insurance carrier against Tong's Fire Extinguisher under any fire or liability insurance policy.");
@@ -981,7 +981,7 @@ public class HCRGen extends Application {
 		
 		noAvailCB.setOnAction(e -> {
 			if (noAvailCB.isSelected() == true) {
-				custSigntf.setText("NO One Available to Sign                                                               Date: ");
+				custSigntf.setText("No one available to sign                                                               Date: ");
 			}
 			else if (noAvailCB.isSelected() == false) {
 				custSigntf.setText( "                                                                                                         Date: ");
@@ -1052,7 +1052,7 @@ public class HCRGen extends Application {
 				cleanNotice.appendText("\nAll cleaning is in accordance with the local fire codes and/or NFPA Standard Code #96. This\n"
 						+ "courtesy follow-up report is provided as a free customer service only; it is not a paid consul-\n"
 						+ "tation. The inspection of the exhaust system is limited to the possible need for improved \n"
-						+ "access and cleaning only. Other deficiencies, wether reported or not, are beyond the scope of\n"
+						+ "access and cleaning only. Other deficiencies, whether reported or not, are beyond the scope of\n"
 						+ "our cleaning crew's knowledge. it is the owner of the exhaust system's responsibility to take \n"
 						+ "appropriate action to modify any deficiencies noted herein or elsewhere.\n");
 				
@@ -1064,7 +1064,7 @@ public class HCRGen extends Application {
 				+ " Time of Service:\t\t" + timeOSTF.getText()+ "\n"
 				+ " Next Service Due:\t\t" + execDate + "\n"
 				+ "\n"
-				+ "Notes to cleaning Technicians:\n"
+				+ "Notes to Cleaning Technicians:\n"
 				+ taServ1.getText() + "\n"
 				+ "\n"
 				+ "\n"
@@ -1072,18 +1072,18 @@ public class HCRGen extends Application {
 				+ "Type of Service completed - Initial Service: " + serviceInit + "                 Regular Service: " + serviceReg + "                Inspection: " + serviceInsp + "\n"
 				+ "Check in: \t\t\t\t\t\t\t\t\t\t Check Out: " + "\n"
 				+ "1. Key works: \t\t\t\t\t\t\t" + dkWSt + "\t\t\t" + "1. Fans working and left running:\t\t\t\t " + fWLRSt +"\n"
-				+ "2. Fans working propperly: \t\t\t\t" + fWPSt + "\t\t\t" + "2. Roof area near fan rised off:\t\t\t\t " + rANFROSt +"\n"
+				+ "2. Fans working properly: \t\t\t\t" + fWPSt + "\t\t\t" + "2. Roof area near fan rinsed off:\t\t\t\t " + rANFROSt +"\n"
 				+ "3. Defects in fan wiring: \t\t\t\t\t" + dIFSt + "\t\t\t" + "3. Hood interior wiped dry:\t\t\t\t\t " + hIWDSt +"\n"
-				+ "4. Fans hinged: \t\t\t\t\t\t" + aFHSt + "\t\t\t" + "4. Kitchen floor clean/Equipment wiped down:\t " + kFCEWDSt + "\n"
+				+ "4. Fans hinged: \t\t\t\t\t\t" + aFHSt + "\t\t\t" + "4. Kitchen floor clean/equipment wiped down:\t " + kFCEWDSt + "\n"
 				+ "5. Floor drains working: \t\t\t\t\t" + fDWSt + "\t\t\t" + "5. Outside area rinsed and clean:\t\t\t\t " + oARCSt + "\n"
-				+ "6. Hood lights working: \t\t\t\t\t" + hLWSt + "\t\t\t" + "6. Hood, Stack, Fan pressure washed:\t\t\t " + hSFPWSt + "\n"
+				+ "6. Hood lights working: \t\t\t\t\t" + hLWSt + "\t\t\t" + "6. Hood, stack, fan pressure washed:\t\t\t " + hSFPWSt + "\n"
 				+ "7. Hood globes present: \t\t\t\t\t" + hGPSt + "\t\t\t" + "7. Any horizontal ductwork:\t\t\t\t\t " + aFHSt + "\n"
-				+ "8. Rooftop grease containment system: \t\t" + rTCSSt + "\t\t\t" + "8. any acess panels:\t\t\t\t\t\t\t " + aPGQSt + "\n"
-				+ "9. Grease buildup around roof fan: \t\t" + gBURFSt + "\t\t\t" + "9. Stack/Ductwork water tight:\t\t\t\t " + sDWTSt + "\n"
+				+ "8. Rooftop grease containment system: \t\t" + rTCSSt + "\t\t\t" + "8. Any access panels:\t\t\t\t\t\t " + aPGQSt + "\n"
+				+ "9. Grease buildup around roof fan: \t\t" + gBURFSt + "\t\t\t" + "9. Stack/ductwork water tight:\t\t\t\t\t " + sDWTSt + "\n"
 				+ "10. Grease build up on fan blades: \t\t\t" + gBUFBSt + "\t\t\t" + "10. Pilot lights reignited:\t\t\t\t\t\t " + pLRSt + "\n"
-				+ "11. Grease build up on Stacks/Ductwork: \t" + gBUSDSt + "\t\t\t" + "11. Photos taken:\t\t\t\t\t\t\t " + photoTSt + "\n"
-				+ "12. Grease build up on Hoods: \t\t\t" + gBUHSt + "\t\t\t" + "12. Hood Sticker replaced:\t\t\t\t\t " + hSRSt + "\n"
-				+ "13. Grease build up on Filter: \t\t\t\t" + gBUFiSt + "\t\t\t" + "Inaccessible areas?:  " + inAccCBSt + "            Key Available?:  " + keyCBSt +"\n" + "\n"
+				+ "11. Grease build up on stacks/ductwork: \t" + gBUSDSt + "\t\t\t" + "11. Photos taken:\t\t\t\t\t\t\t " + photoTSt + "\n"
+				+ "12. Grease build up on Hoods: \t\t\t" + gBUHSt + "\t\t\t" + "12. Hood sticker replaced:\t\t\t\t\t " + hSRSt + "\n"
+				+ "13. Grease build up on filter: \t\t\t\t" + gBUFiSt + "\t\t\t" + "Inaccessible areas?:  " + inAccCBSt + "            Key available?:  " + keyCBSt +"\n" + "\n"
 				+ "Cleaning Technician that performed service:      " + techtf.getValue() + "\n"
 				+ "Date Completed: " + techDatetf.getValue() 
 				+ "                  Time In: " + tfTI.getText()+ "                  Time Out: " + tfTO.getText()+ "\n"+ "\n"
@@ -1092,7 +1092,7 @@ public class HCRGen extends Application {
 				+ "IN THE EVENT OF DEFAULT, TONG'S FIRE EXTINGUISHER SHALL BE ENTITLED TO RECOVER COST OF COLLECTION, \nINCLUDING REASONABLE ATTORNEY FEES. \nACKNOWLEDGMENT OF KITCHEN CONDITION & KEC SERVICE COMPLETED. BY SIGNING BELOW THE CUSTOMER \nACKNOWLEDGES SERVICE WAS COMPLETED AND THE KITCHEN WAS LEFT CLEAN AND IN SATISFACTORY CONDITION.\n"
 				+ "\nCustomer Signature: " + custSignSt + "\n"
 				+ "                                   --------------------------------------------------------------                      -------------------------"  
-				+ "\nClaims of unsatisfactory workmanship must be made within 48 hours. Invoices are subject to an intrest charge of the lesser of \n1.5% per month(18% per year) or the maximum rate allowed by law on any unpaid invoices outstanding after 30 days from date \nof service. The Customer herby waives thier rights of subrogation by thier insurance carrier against Tong's Fire Extinguisher \nunder any fire or liability insurance policy.\n"
+				+ "\nClaims of unsatisfactory workmanship must be made within 48 hours. Invoices are subject to an interest charge of the lesser of \n1.5% per month(18% per year) or the maximum rate allowed by law on any unpaid invoices outstanding after 30 days from date \nof service. The Customer herby waives thier rights of subrogation by thier insurance carrier against Tong's Fire Extinguisher \nunder any fire or liability insurance policy.\n"
 				
 				);
 				
