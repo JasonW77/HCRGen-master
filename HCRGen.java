@@ -1057,12 +1057,13 @@ public class HCRGen extends Application {
 						+ " appropriate action to modify any deficiencies noted herein or elsewhere.\n");
 				
 				printTa.appendText("\n" + "\n" + "\n" + "\n" + "\n"+"\n" + "\n" + "\n"
-				+ " Service Scheduled with: " + servSchTF.getText() + "\n"
-				+ " Store Closing Manager: " + storeCMTF.getText()+ "\n"
-				+ " Date of Service:\t\t" + dateOSDP.getValue()+ "\n"
-				+ " Service Frequency:\t\t" + serviceECB.getValue()+ "\n"
-				+ " Time of Service:\t\t" + timeOSTF.getText()+ "\n"
-				+ " Next Service Due:\t\t" + execDate + "\n"
+				+ "    Service Scheduled with: " + servSchTF.getText() + "\n"
+				+ "    Store Closing Manager: " + storeCMTF.getText()+ "\n"
+				+ "    Date of Service:\t\t" + dateOSDP.getValue()+ "\n"
+				+ "    Service Frequency:\t" + serviceECB.getValue()+ "\n"
+				+ "    Time of Service:\t\t" + timeOSTF.getText()+ "\n"
+				+ "    Next Service Due:\t" + execDate + "\n"
+								+ "\t__________________________________________________________________________________________________________________________________________\n"
 				+ "\n"				+ "\t\t\t\t\t\t\t\t\tKITCHEN EXHAUST HOOD CLEANING REPORT\n\n" 
 				+ "\tType of Service completed "+"\t\t\t\t\t\t\t\t\tHood Location:  " + moreHoods2.getText()+ "\n\t\t\tInitial Service: " + serviceInit + "\n\t\t\tRegular Service: " + serviceReg + "\n\t\t\tInspection: " + serviceInsp + "\n\n"
 				+ "\tCheck in: \t\t\t\t\t\t\t\t\t\t\t Check Out: " + "\n"
@@ -1083,10 +1084,12 @@ public class HCRGen extends Application {
 				+ "\t" + taServ1.getText() + "\n"
 				+ "\tMiscellaneous Notes: "
 				+ miscNotTa.getText() + "\n\n"
-				+ "\tService performed by:      " + techtf.getValue() + "\t\tDate Completed: " + dateOSDP.getValue()	+ "                  Time In: " + tfTI.getText()+ "                  Time Out: " + tfTO.getText()+ "\n"+ "\n"
+				+ "\tService performed by:      " + techtf.getValue() + "\t\tDate Completed: " + dateOSDP.getValue()	+ "                  Time In: " + tfTI.getText()+ "                  Time Out: " + tfTO.getText()+ "\n"
+				+ "\t__________________________________________________________________________________________________________________________________________\n"
 
 				+ "\tIN THE EVENT OF DEFAULT, TONG'S FIRE EXTINGUISHER SHALL BE ENTITLED TO RECOVER COST OF COLLECTION, INCLUDING\n\tREASONABLE ATTORNEY FEES. ACKNOWLEDGMENT OF KITCHEN CONDITION & KEC SERVICE COMPLETED. BY SIGNING BELOW \n\tTHE CUSTOMER ACKNOWLEDGES ALL SERVICE WAS COMPLETED AND THE KITCHEN WAS LEFT CLEAN AND IN SATISFACTORY \n\tCONDITION."
 				+ "\n\tClaims of unsatisfactory workmanship must be made within 48 hours. Invoices are subject to an interest charge of the lesser of \n\t1.5% per month(18% per year) or the maximum rate allowed by law on any unpaid invoices outstanding after 30 days from date \n\tof service. The Customer herby waives thier rights of subrogation by thier insurance carrier against Tong's Fire Extinguisher \n\tunder any fire or liability insurance policy.\n"
+				+ "\t__________________________________________________________________________________________________________________________________________\n"
 				+ "\n\n\n\tCustomer Signature: " + custSignSt + "\n"
 				+ "                                         --------------------------------------------------------------                        -------------------------"  
 				
