@@ -4,14 +4,14 @@
  *  HCRGen application for generating Hood Cleaning Reports (or HCRGen.java).
  * 	I created this program for Tong's Fire Extinguisher Sales and Service to help them move from paper reports to an all digital report system.
  * 
- * Version 2.0 changes:
+ * Version 1.0 changes:
  * * A new report form the (RFSSR) Restaurant Fire System Service Report window has been added~
  * * * the report for (RFSSR) Restaurant Fire System Service Report has been added~
  * * The HCRGen start window, Customer Creation window, and Customer edit windows have been added.
  * * * this allows for a choice in reports and the customer information edit/add windows to be selected.
  * * the CusOb class has been added, this allows customer information to be saved.
  * 
- * Version 2.1 changes:
+ * Version 1.2 changes:
  * * TechOb class and the Administration class, this allows:
  * * multiple Technicians can now be created and saved.
  * * * a technician pane has been added to edit this information.
@@ -23,7 +23,7 @@
  * 
 	<p>Date created 8/17/2020 <p/>
 	<p>current Version release Date 10/9/2020 <p/>
-	<p>Version 2.1 <p/>
+	<p>Version 1.2 <p/>
 	
 	@author Jason Waters
  */
