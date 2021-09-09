@@ -4,14 +4,14 @@
  *  HCRGen application for generating Hood Cleaning Reports (or HCRGen.java).
  * 	I created this program for Tong's Fire Extinguisher Sales and Service to help them move from paper reports to an all digital report system.
  * 
- * Version 1.0 changes:
+ * Version 2.0 changes:
  * * A new report form the (RFSSR) Restaurant Fire System Service Report window has been added~
  * * * the report for (RFSSR) Restaurant Fire System Service Report has been added~
  * * The HCRGen start window, Customer Creation window, and Customer edit windows have been added.
  * * * this allows for a choice in reports and the customer information edit/add windows to be selected.
  * * the CusOb class has been added, this allows customer information to be saved.
  * 
- * Version 1.2 changes:
+ * Version 2.1 changes:
  * * TechOb class and the Administration class, this allows:
  * * multiple Technicians can now be created and saved.
  * * * a technician pane has been added to edit this information.
@@ -23,7 +23,7 @@
  * 
 	<p>Date created 8/17/2020 <p/>
 	<p>current Version release Date 10/9/2020 <p/>
-	<p>Version 1.2 <p/>
+	<p>Version 2.1 <p/>
 	
 	@author Jason Waters
  */
@@ -85,11 +85,13 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 public class HCRGen extends Application {
 	static Font font = Font.font("Verdana", FontWeight.BOLD,FontPosture.ITALIC,10);
 	static Font font2 = Font.font("Verdana", FontWeight.BOLD,FontPosture.ITALIC,15);
 	static Map<String,Object> clientmap = new HashMap<>();
+	static Map<String,Object> oldclientmap = new HashMap<>();
 	static Map<String,Object> techmap = new HashMap<>();
 	static Map<Integer,String> busmap = new HashMap<>();
 	static Set<String> techlist = new HashSet<>();
@@ -97,6 +99,7 @@ public class HCRGen extends Application {
 	static java.io.File mapFile = new java.io.File("HCRGen/Map/");
 	static String mapFileLoc = mapFile.getAbsolutePath();
 	static File MapFiledirectory = new File(mapFileLoc + "/" + "ClientList.bin");
+	static File MapFiledirectory2 = new File(mapFileLoc + "/" + "ClientListV1.bin");
 	static File techMapFiledirectory = new File(mapFileLoc + "/" + "TechList.bin");
 	static File busMapFiledirectory = new File(mapFileLoc + "/" + "BusIn.bin");
 	
@@ -258,10 +261,23 @@ public class HCRGen extends Application {
 			}
 		}
 		if (! MapFiledirectory.exists()) {
-			if(clientmap.isEmpty() == true){
-				System.out.println("\nNo customer list found, creating default customer!");
-				makeCust();
-			}
+			if (MapFiledirectory2.exists()) {
+				if(clientmap.isEmpty() == true){
+					System.out.println("\nNo customer list found, checking for older version!");
+					try {
+						getOldCust();
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}else if(! MapFiledirectory2.exists()) {	
+					System.out.println("\nNo customer lists found, creating default customer!");
+					makeCust();
+			}	
 		}else if(MapFiledirectory.exists()) {
 			try {
 				System.out.println("\nGetting Customer List!");
@@ -552,10 +568,10 @@ public class HCRGen extends Application {
 		Label HCRserviceELabel = new Label(" Service Frequency ");
 		Label HCRtimeOSLabel = new Label(" Time of Service: ");
 	
-		TextField HCRservSchTF = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getSSw());
+		TextField HCRservSchTF = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getSSw());
 			HCRservSchTF.setMinWidth(205);
 			HCRservSchTF.setFont(new Font("Cambria", 10));
-		TextField HCRstoreCMTF = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getSCM());
+		TextField HCRstoreCMTF = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getSCM());
 			HCRstoreCMTF.setFont(new Font("Cambria", 10));
 			HCRstoreCMTF.setMaxWidth(275);
 		TextField HCRtimeOSTF = new TextField("24:00");
@@ -565,7 +581,7 @@ public class HCRGen extends Application {
 		DatePicker HCRdateOSDP = new DatePicker(GENdateNow);
 		
 		ComboBox<String> HCRserviceECB = new ComboBox<String>();
-			HCRserviceECB.setValue(((CusOb) clientmap.get(CUSTOBJFOCUS)).getSF());
+			HCRserviceECB.setValue(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getSF());
 			HCRserviceECB.getItems().addAll("Annually", "Bi-Annually", "Quarterly");
 		
 		GridPane HCRservGrid = new GridPane();
@@ -592,25 +608,25 @@ public class HCRGen extends Application {
 		Label HCRcustAdrStateLabel = new Label(" State: ");
 		Label HCRcustAdrZipLabel = new Label(" Zip: ");
 		
-		TextField HCRtfcustPhone = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getPhone());
+		TextField HCRtfcustPhone = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getPhone());
 			HCRtfcustPhone.setFont(new Font("Cambria", 10));
 			HCRtfcustPhone.setMaxWidth(115);
-		TextField HCRcustEmailTF = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getEmail());
+		TextField HCRcustEmailTF = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getEmail());
 			HCRcustEmailTF.setFont(new Font("Cambria", 10));
 			HCRcustEmailTF.setMaxWidth(115);
-		TextField HCRtfcustName = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getClient());
+		TextField HCRtfcustName = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getClient());
 			HCRtfcustName.setFont(new Font("Cambria", 10));
 			HCRtfcustName.setMinWidth(205);
-		TextField HCRtfcustAdr = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getAddress());
+		TextField HCRtfcustAdr = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getAddress());
 			HCRtfcustAdr.setFont(new Font("Cambria", 10));
 			HCRtfcustAdr.setMaxWidth(275);
-		TextField HCRtfcustAdrCity = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getCity());
+		TextField HCRtfcustAdrCity = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getCity());
 			HCRtfcustAdrCity.setFont(new Font("Cambria", 10));
 			HCRtfcustAdrCity.setMaxWidth(115);
-		TextField HCRtfcustAdrState = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getState());
+		TextField HCRtfcustAdrState = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getState());
 			HCRtfcustAdrState.setFont(new Font("Cambria", 10));
 			HCRtfcustAdrState.setMaxWidth(115);
-		TextField HCRtfcustAdrZip = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getZip());
+		TextField HCRtfcustAdrZip = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getZip());
 			HCRtfcustAdrZip.setFont(new Font("Cambria", 10));
 			HCRtfcustAdrZip.setMaxWidth(115);
 		
@@ -1155,6 +1171,7 @@ public class HCRGen extends Application {
 				}
 			});
 		Button HCRbtPrint = new Button("Print");
+		Button HCRbtPDF = new Button("PDF");
 		CheckBox HCRkeyCB = new CheckBox("Key ");
 		CheckBox HCRnoAvailCB = new CheckBox("No one available to sign ");
 
@@ -1434,7 +1451,7 @@ public class HCRGen extends Application {
 				AnchorPane.setRightAnchor(HCRprintTitleTa,175.0);
 				AnchorPane.setTopAnchor(HCRprintTitleTa,257.0);
 				
-				Stage HCRprintWindow = new Stage();
+				Stage window = new Stage();
 				Stage HCRprintBtWindow = new Stage();
 				Scene HCRprintScene = new Scene(HCRprintAP, 775, 1000);
 				Scene HCRprintBtScene = new Scene(HCRprintBtStage , 200, 50);
@@ -1501,25 +1518,41 @@ public class HCRGen extends Application {
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}
+						
+				/* fix this later
 						//print(primaryStage);
 						//defaultPrinter(primaryStage);
 						//startPrint(primaryStage);
 						//startSetupStage(primaryStage);
-						//printSetup(HCRprintAP, HCRprintWindow);
-						
-						printNode(HCRprintAP);
-					
+						//printSetup(HCRprintAP, window);
+						//showPrinters(HCRprintAP);
+						//printNode(HCRprintAP);
+				*/
 					});
+					
+				/* will add PDF button later
+					HCRbtPDF.setOnAction(e1 -> {
+						System.out.println("PDF button pushed");
+						PrinterJob job = PrinterJob.createPrinterJob();
+						
+						if(job != null) {
+							job.showPrintDialog(window);
+							job.printPage(HCRprintAP);
+							job.endJob();
+						}
+						//printSetup(HCRprintAP, window);
+					});
+				*/
 					HBox HCRprintHBox = new HBox();
-						HCRprintHBox.getChildren().addAll(HCRbtPrint,HCRcancel);
+						HCRprintHBox.getChildren().addAll(HCRbtPrint,/*HCRbtPDF,*/HCRcancel);
 					
 						HCRprintBtStage.getChildren().addAll(HCRprintHBox);
 					
-						HCRprintWindow.setTitle("HCRGen Report");
-						HCRprintWindow.setScene(HCRprintScene);
+						window.setTitle("HCRGen Report");
+						window.setScene(HCRprintScene);
 						
-						HCRprintWindow.setX(0);
-						HCRprintWindow.setY(0);
+						window.setX(0);
+						window.setY(0);
 						
 						HCRprintBtWindow.setTitle("Print/Cancel");
 						HCRprintBtWindow.setScene(HCRprintBtScene);
@@ -1527,11 +1560,11 @@ public class HCRGen extends Application {
 						HCRprintBtWindow.setX(900);
 						HCRprintBtWindow.setY(100);
 						
-						HCRprintWindow.show();
+						window.show();
 						HCRprintBtWindow.show();
 						
 					HCRcancel.setOnAction(ex -> {
-							HCRprintWindow.close();	
+							window.close();	
 							HCRprintBtWindow.close();	
 					});
 					
@@ -1555,7 +1588,7 @@ public class HCRGen extends Application {
 							}
 						}
 						else if (ex.getCode().equals(KeyCode.ESCAPE)) {
-							HCRprintWindow.close();	
+							window.close();	
 							HCRprintBtWindow.close();
 						}	
 					});
@@ -1730,13 +1763,13 @@ public class HCRGen extends Application {
 		Label RFSSRserviceELabel = new Label(" Service Frequency ");
 			
 		ComboBox<String> RFSSRserviceECB = new ComboBox<String>();
-			RFSSRserviceECB.setValue(((CusOb) clientmap.get(CUSTOBJFOCUS)).getSF());
+			RFSSRserviceECB.setValue(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getSF());
 			RFSSRserviceECB.getItems().addAll("Annually", "Bi-Annually", "Quarterly");
 				
-		TextField RFSSRservSchTF = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getSSw());
+		TextField RFSSRservSchTF = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getSSw());
 			RFSSRservSchTF.setMinWidth(205);
 			RFSSRservSchTF.setFont(new Font("Cambria", 10));
-		TextField RFSSRstoreCMTF = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getSCM());
+		TextField RFSSRstoreCMTF = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getSCM());
 			RFSSRstoreCMTF.setFont(new Font("Cambria", 10));
 			RFSSRstoreCMTF.setMaxWidth(275);
 		TextField RFSSRtimeOSTF = new TextField("24:00");
@@ -1769,25 +1802,25 @@ public class HCRGen extends Application {
 		Label RFSSRcustAdrStateLabel = new Label(" State: ");
 		Label RFSSRcustAdrZipLabel = new Label(" Zip: ");
 			
-		TextField RFSSRtfcustPhone = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getPhone());
+		TextField RFSSRtfcustPhone = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getPhone());
 			RFSSRtfcustPhone.setFont(new Font("Cambria", 10));
 			RFSSRtfcustPhone.setMaxWidth(115);
-		TextField RFSSRcustEmailTF = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getEmail());
+		TextField RFSSRcustEmailTF = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getEmail());
 			RFSSRcustEmailTF.setFont(new Font("Cambria", 10));
 			RFSSRcustEmailTF.setMaxWidth(115);
-		TextField RFSSRtfcustName = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getClient());
+		TextField RFSSRtfcustName = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getClient());
 			RFSSRtfcustName.setFont(new Font("Cambria", 10));
 			RFSSRtfcustName.setMinWidth(205);
-		TextField RFSSRtfcustAdr = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getAddress());
+		TextField RFSSRtfcustAdr = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getAddress());
 			RFSSRtfcustAdr.setFont(new Font("Cambria", 10));
 			RFSSRtfcustAdr.setMaxWidth(275);
-		TextField RFSSRtfcustAdrCity = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getCity());
+		TextField RFSSRtfcustAdrCity = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getCity());
 			RFSSRtfcustAdrCity.setFont(new Font("Cambria", 10));
 			RFSSRtfcustAdrCity.setMaxWidth(115);
-		TextField RFSSRtfcustAdrState = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getState());
+		TextField RFSSRtfcustAdrState = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getState());
 			RFSSRtfcustAdrState.setFont(new Font("Cambria", 10));
 			RFSSRtfcustAdrState.setMaxWidth(115);
-		TextField RFSSRtfcustAdrZip = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getZip());
+		TextField RFSSRtfcustAdrZip = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getZip());
 			RFSSRtfcustAdrZip.setFont(new Font("Cambria", 10));
 			RFSSRtfcustAdrZip.setMaxWidth(115);
 		
@@ -1872,9 +1905,9 @@ public class HCRGen extends Application {
 			RFSSRfl500CB.getItems().addAll("1","2","3","4","5","6","7","8","9","10","11","12");
 			
 		DatePicker RFSSRLHTDDP = new DatePicker();
-			RFSSRLHTDDP.setValue(((CusOb) clientmap.get(CUSTOBJFOCUS)).getLastHydro());
+			RFSSRLHTDDP.setValue(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getLastHydro());
 
-		TextField RFSSRNHTDDP = new TextField(((CusOb) clientmap.get(CUSTOBJFOCUS)).getLastHydro().plusYears(12).toString());
+		TextField RFSSRNHTDDP = new TextField(((CusObV2) clientmap.get(CUSTOBJFOCUS)).getLastHydro().plusYears(12).toString());
 			RFSSRNHTDDP.setEditable(false);
 		TextField RFSSRCALTF = new TextField();
 			
@@ -2292,9 +2325,9 @@ public class HCRGen extends Application {
 		
 		ToggleGroup RFSSRlabel32TG = new ToggleGroup();
 		RadioButton RFSSRrb32 = new RadioButton();
-			RFSSRrb31.setToggleGroup(RFSSRlabel32TG);
+			RFSSRrb32.setToggleGroup(RFSSRlabel32TG);
 		RadioButton RFSSRrb32N = new RadioButton();
-			RFSSRrb31N.setToggleGroup(RFSSRlabel32TG);
+			RFSSRrb32N.setToggleGroup(RFSSRlabel32TG);
 		RadioButton RFSSRrb32Na = new RadioButton();
 			RFSSRrb32Na.setToggleGroup(RFSSRlabel32TG);
 			
@@ -2818,7 +2851,9 @@ public class HCRGen extends Application {
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-					printNode(RFSSRprintStage);
+					/* add this later will also need to add the PDF button
+					 * printNode(RFSSRprintStage);
+					 */
 				});
 			});
 				
@@ -2943,7 +2978,7 @@ public class HCRGen extends Application {
 				String email = CAEmailTF.getText().trim();
 				LocalDate LastHydro = CALastHydroDP.getValue();
 				
-				CusOb obj = new CusOb(client,address,city,state,zip,phone,SSw,SCM,SF,email,LastHydro);
+				CusObV2 obj = new CusObV2(client,address,city,state,zip,phone,SSw,SCM,SF,email,LastHydro);
 				
 				System.out.println("Saving Customer List via saveCust()");
 				try {
@@ -3109,6 +3144,7 @@ public class HCRGen extends Application {
 		Label CEstoreCMLabel = new Label(" Store Closing Manager: ");
 		Label CEserviceELabel = new Label(" Service Frequency ");
 		Label CELastHydroLabel = new Label(" Last Hydro Test ");
+		Label CELastHydroDisplay = new Label();
 
 		TextField CEtfcustName = new TextField();
 			CEtfcustName.setFont(new Font("Cambria", 10));
@@ -3138,7 +3174,7 @@ public class HCRGen extends Application {
 			CEcustEmailTF.setFont(new Font("Cambria", 10));
 			CEcustEmailTF.setMaxWidth(200);
 		
-		DatePicker CELastHydroDP = new DatePicker();
+		//DatePicker CELastHydroDP = new DatePicker();
 			
 		
 		ComboBox<String> CEserviceECB = new ComboBox<String>();
@@ -3156,9 +3192,9 @@ public class HCRGen extends Application {
 				String SCM1 = CEstoreCMTF.getText().trim();
 				String SF1 = CEserviceECB.getValue().trim();
 				String email1 = CEcustEmailTF.getText().trim();
-				LocalDate LastHydro1 = CELastHydroDP.getValue();
-				
-				CusOb obj = new CusOb(client1,address1,city1,state1,zip1,phone1,SSw1,SCM1,SF1,email1,LastHydro1);
+				LocalDate LastHydro1 = ((CusObV2) clientmap.get(CEtfcustName.getText())).getLastHydro(); /*CELastHydroDP.getValue();
+				*/
+				CusObV2 obj = new CusObV2(client1,address1,city1,state1,zip1,phone1,SSw1,SCM1,SF1,email1,LastHydro1);
 				
 				System.out.println("Saving Customer List! saveCust()");
 				try {
@@ -3180,17 +3216,18 @@ public class HCRGen extends Application {
 					CEtfcustName.setText("Name Required!");
 				}
 				else {
-    			CEtfcustName.setText( ((CusOb) clientmap.get(CEtfcustName.getText())).getClient().toString());
-    			CEtfcustAdr.setText( ((CusOb) clientmap.get(CEtfcustName.getText())).getAddress().toString());
-    		 	CEtfcustAdrCity.setText( ((CusOb) clientmap.get(CEtfcustName.getText())).getCity().toString());
-    		 	CEtfcustAdrState.setText( ((CusOb) clientmap.get(CEtfcustName.getText())).getState().toString());
-    		 	CEtfcustAdrZip.setText( ((CusOb) clientmap.get(CEtfcustName.getText())).getZip().toString());
-    		 	CEtfcustPhone.setText( ((CusOb) clientmap.get(CEtfcustName.getText())).getPhone().toString());
-    			CEservSchTF.setText( ((CusOb) clientmap.get(CEtfcustName.getText())).getSSw().toString());
-    		 	CEstoreCMTF.setText( ((CusOb) clientmap.get(CEtfcustName.getText())).getSCM().toString());
-    			CEserviceECB.setValue( ((CusOb) clientmap.get(CEtfcustName.getText())).getSF().toString());
-    			CEcustEmailTF.setText( ((CusOb) clientmap.get(CEtfcustName.getText())).getEmail().toString());
-    		 	CELastHydroDP.setId( ((CusOb) clientmap.get(CEtfcustName.getText())).getLastHydro().toString());
+    			CEtfcustName.setText( ((CusObV2) clientmap.get(CEtfcustName.getText())).getClient().toString());
+    			CEtfcustAdr.setText( ((CusObV2) clientmap.get(CEtfcustName.getText())).getAddress().toString());
+    		 	CEtfcustAdrCity.setText( ((CusObV2) clientmap.get(CEtfcustName.getText())).getCity().toString());
+    		 	CEtfcustAdrState.setText( ((CusObV2) clientmap.get(CEtfcustName.getText())).getState().toString());
+    		 	CEtfcustAdrZip.setText( ((CusObV2) clientmap.get(CEtfcustName.getText())).getZip().toString());
+    		 	CEtfcustPhone.setText( ((CusObV2) clientmap.get(CEtfcustName.getText())).getPhone().toString());
+    			CEservSchTF.setText( ((CusObV2) clientmap.get(CEtfcustName.getText())).getSSw().toString());
+    		 	CEstoreCMTF.setText( ((CusObV2) clientmap.get(CEtfcustName.getText())).getSCM().toString());
+    			CEserviceECB.setValue( ((CusObV2) clientmap.get(CEtfcustName.getText())).getSF().toString());
+    			CEcustEmailTF.setText( ((CusObV2) clientmap.get(CEtfcustName.getText())).getEmail().toString());
+    			CELastHydroDisplay.setText( ((CusObV2) clientmap.get(CEtfcustName.getText())).getLastHydro().toString());
+    		 	//CELastHydroDP.setId( ((CusObV2) clientmap.get(CEtfcustName.getText())).getLastHydro().toString());
 				}
 			});
 		Button CEBackBT = new Button("Return to Main Menu");
@@ -3261,10 +3298,11 @@ public class HCRGen extends Application {
 			CEservGrid.add(CEserviceECB,1,10);
 		
 			CEservGrid.add(CELastHydroLabel,0,11);
-			CEservGrid.add(CELastHydroDP,1,11);
+			CEservGrid.add(CELastHydroDisplay,1,11);
+			//CEservGrid.add(CELastHydroDP,1,12);
 			
-			CEservGrid.add(CEbtFin, 1, 12);
-			CEservGrid.add(CEBackBT, 0, 12);
+			CEservGrid.add(CEbtFin, 1, 13);
+			CEservGrid.add(CEBackBT, 0, 13);
 			
 			CEhb1.getChildren().addAll(CEheadPane, CEservGrid);
 			CEmainVB.getChildren().addAll(CEhb1);
@@ -3768,12 +3806,12 @@ public class HCRGen extends Application {
 				busmap.put(7, BEEmailTF.getText().trim());
 				busmap.put(8, BELicTF.getText().trim());
 				busmap.put(9, BEPWTF.getText().trim());
-				
+				/*
 					if (passProtection == true)
 						busmap.put(10, "True");
 					else if (passProtection != false)
 						busmap.put(10, "False");
-					
+					*/
 				try {
 					saveBus();
 				} catch (FileNotFoundException e1) {
@@ -4340,6 +4378,38 @@ public class HCRGen extends Application {
 			System.out.println("Done getting Client List!");
 	}
 	
+	/** Method for getting the client list from the saved file
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	@SuppressWarnings("unchecked")
+	public static void getOldCust() throws ClassNotFoundException, IOException{
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(mapFile + "/" + "ClientListV1.bin"));
+			oldclientmap = (HashMap<String, Object>)ois.readObject();
+			ois.close();
+			for (String s : oldclientmap.keySet()) {
+				System.out.println("\t" + s);
+				
+				String client = ((CusOb) oldclientmap.get(s)).getClient();
+				String address = ((CusOb) oldclientmap.get(s)).getAddress();
+				String city = ((CusOb) oldclientmap.get(s)).getCity();
+				String state = ((CusOb) oldclientmap.get(s)).getState();
+				String zip= ((CusOb) oldclientmap.get(s)).getZip();
+				String phone= ((CusOb) oldclientmap.get(s)).getPhone();
+				String SSw = ((CusOb) oldclientmap.get(s)).getSSw();
+				String SCM = ((CusOb) oldclientmap.get(s)).getSCM();
+				String SF = ((CusOb) oldclientmap.get(s)).getSF();
+				String email = "Enter Email";
+				LocalDate LastHydro = ((CusOb) oldclientmap.get(client)).getLastHydro();
+				
+				CusObV2 obj = new CusObV2(client,address,city,state,zip,phone,SSw,SCM,SF,email, LastHydro);
+				
+				clientmap.put(obj.getClient(), obj);
+				System.out.println(s + " Client added to clientmap!");
+			}
+			System.out.println("Done getting Old Client List!");
+	}
+	
 	/** Method for saving the Client info in file format
 	 * @param al ArrayList<Object> for customer objects
 	 * @throws IOException 
@@ -4347,7 +4417,7 @@ public class HCRGen extends Application {
 	 */
 	@SuppressWarnings("resource")
 	public static void saveCust(Object obj) throws FileNotFoundException, IOException {
-		clientmap.put(((CusOb) obj).getClient(), obj);
+		clientmap.put(((CusObV2) obj).getClient(), obj);
 		System.out.println("Object written to clientmap!");
 			
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(mapFile + "/" + "ClientList.bin"));
@@ -4371,7 +4441,7 @@ public class HCRGen extends Application {
 		String email = "Enter Email";
 		LocalDate LastHydro = LocalDate.now();
 		
-		CusOb obj = new CusOb(client,address,city,state,zip,phone,SSw,SCM,SF,email, LastHydro);
+		CusObV2 obj = new CusObV2(client,address,city,state,zip,phone,SSw,SCM,SF,email, LastHydro);
 		
 		clientmap.put(obj.getClient(), obj);
 		System.out.println("Default Client added to clientmap!");
@@ -4509,17 +4579,17 @@ public class HCRGen extends Application {
 		TextArea CSTA = new TextArea();
 			CSTA.setCache(false);
 			CSTA.appendText(
-            			"Client Name: \t\t\t" + ((CusOb) clientmap.get(client)).getClient().toString()
-            		+	"\nAddress: \t\t\t\t" + ((CusOb) clientmap.get(client)).getAddress().toString()
-            		+ 	"\nCity: \t\t\t\t\t" + ((CusOb) clientmap.get(client)).getCity().toString()
-            		+ 	"\nState: \t\t\t\t" + ((CusOb) clientmap.get(client)).getState().toString()
-            		+ 	"\nZipcode: \t\t\t\t" + ((CusOb) clientmap.get(client)).getZip().toString()
-            		+ 	"\nPhonenumber: \t\t" + ((CusOb) clientmap.get(client)).getPhone().toString()
-            		+	"\nService Scheduled with: \t" + ((CusOb) clientmap.get(client)).getSSw().toString()
-            		+ 	"\nStore Closing Manager: \t" + ((CusOb) clientmap.get(client)).getSCM().toString()
-            		+	"\nService Frequency: \t\t" + ((CusOb) clientmap.get(client)).getSF().toString()
-            		+	"\nEmail: \t\t\t\t" + ((CusOb) clientmap.get(client)).getEmail().toString()
-            		+ 	"\nLast Hydro Test: \t\t" + ((CusOb) clientmap.get(client)).getLastHydro().toString()
+            			"Client Name: \t\t\t" + ((CusObV2) clientmap.get(client)).getClient().toString()
+            		+	"\nAddress: \t\t\t\t" + ((CusObV2) clientmap.get(client)).getAddress().toString()
+            		+ 	"\nCity: \t\t\t\t\t" + ((CusObV2) clientmap.get(client)).getCity().toString()
+            		+ 	"\nState: \t\t\t\t" + ((CusObV2) clientmap.get(client)).getState().toString()
+            		+ 	"\nZipcode: \t\t\t\t" + ((CusObV2) clientmap.get(client)).getZip().toString()
+            		+ 	"\nPhonenumber: \t\t" + ((CusObV2) clientmap.get(client)).getPhone().toString()
+            		+	"\nService Scheduled with: \t" + ((CusObV2) clientmap.get(client)).getSSw().toString()
+            		+ 	"\nStore Closing Manager: \t" + ((CusObV2) clientmap.get(client)).getSCM().toString()
+            		+	"\nService Frequency: \t\t" + ((CusObV2) clientmap.get(client)).getSF().toString()
+            		+	"\nEmail: \t\t\t\t" + ((CusObV2) clientmap.get(client)).getEmail().toString()
+            		+ 	"\nLast Hydro Test: \t\t" + ((CusObV2) clientmap.get(client)).getLastHydro().toString()
             );
 			
 			CSWindow.getChildren().addAll(CSTA);
@@ -4621,17 +4691,17 @@ public class HCRGen extends Application {
 		
 		for (String s : clientmap.keySet()) {
 			CLTA.appendText(
-        			"Client Name: \t\t\t\t" + ((CusOb) clientmap.get(s)).getClient().toString()
-        		+	"\nAddress: \t\t\t\t\t" + ((CusOb) clientmap.get(s)).getAddress().toString()
-        		+ 	"\nCity: \t\t\t\t\t\t" + ((CusOb) clientmap.get(s)).getCity().toString()
-        		+ 	"\nState: \t\t\t\t\t" + ((CusOb) clientmap.get(s)).getState().toString()
-        		+ 	"\nZipcode: \t\t\t\t\t" + ((CusOb) clientmap.get(s)).getZip().toString()
-        		+ 	"\nPhonenumber: \t\t\t" + ((CusOb) clientmap.get(s)).getPhone().toString()
-        		+	"\nService Scheduled with: \t\t" + ((CusOb) clientmap.get(s)).getSSw().toString()
-        		+ 	"\nStore Closing Manager: \t\t" + ((CusOb) clientmap.get(s)).getSCM().toString()
-        		+	"\nService Frequency: \t\t\t" + ((CusOb) clientmap.get(s)).getSF().toString()
-        		+	"\nEmail: \t\t\t\t\t" + ((CusOb) clientmap.get(s)).getEmail().toString()
-        		+ 	"\nLast Hydro Test: \t\t\t" + ((CusOb) clientmap.get(s)).getLastHydro().toString()
+        			"Client Name: \t\t\t\t" + ((CusObV2) clientmap.get(s)).getClient().toString()
+        		+	"\nAddress: \t\t\t\t\t" + ((CusObV2) clientmap.get(s)).getAddress().toString()
+        		+ 	"\nCity: \t\t\t\t\t\t" + ((CusObV2) clientmap.get(s)).getCity().toString()
+        		+ 	"\nState: \t\t\t\t\t" + ((CusObV2) clientmap.get(s)).getState().toString()
+        		+ 	"\nZipcode: \t\t\t\t\t" + ((CusObV2) clientmap.get(s)).getZip().toString()
+        		+ 	"\nPhonenumber: \t\t\t" + ((CusObV2) clientmap.get(s)).getPhone().toString()
+        		+	"\nService Scheduled with: \t\t" + ((CusObV2) clientmap.get(s)).getSSw().toString()
+        		+ 	"\nStore Closing Manager: \t\t" + ((CusObV2) clientmap.get(s)).getSCM().toString()
+        		+	"\nService Frequency: \t\t\t" + ((CusObV2) clientmap.get(s)).getSF().toString()
+        		+	"\nEmail: \t\t\t\t\t" + ((CusObV2) clientmap.get(s)).getEmail().toString()
+        		+ 	"\nLast Hydro Test: \t\t\t" + ((CusObV2) clientmap.get(s)).getLastHydro().toString()
             	+	"\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n");
 		}
 			
@@ -4872,13 +4942,12 @@ public class HCRGen extends Application {
         double pgW = pageLayout.getPrintableWidth();
         double pgH = pageLayout.getPrintableHeight();
 
-         
         // Get The Printer
         Printer printer = job.getPrinter();
         
         // Create the Page Layout of the Printer
-        pageLayout = printer.createPageLayout(Paper.NA_LETTER,
-                PageOrientation.PORTRAIT,Printer.MarginType.DEFAULT);
+        pageLayout = printer.createPageLayout(Paper.NA_LETTER, PageOrientation.PORTRAIT,Printer.MarginType.HARDWARE_MINIMUM);
+
         
         jobSettings.setPageLayout(pageLayout);
         
@@ -4886,7 +4955,6 @@ public class HCRGen extends Application {
         {
             return;
         }
- 
         // Show the print setup dialog
         boolean proceed = job.showPrintDialog(owner);
          
@@ -4899,6 +4967,7 @@ public class HCRGen extends Application {
     public static void printNode(final Node node){
         Printer printer = Printer.getDefaultPrinter();
         PageLayout pageLayout = printer.createPageLayout(Paper.NA_LETTER, PageOrientation.PORTRAIT, Printer.MarginType.DEFAULT);
+        //DEFAULT,EQUAL,EQUAL_OPPOSITES,HARDWARE_MINIMUM
         double scaleX = pageLayout.getPrintableWidth() / node.getBoundsInParent().getWidth();
         double scaleY = pageLayout.getPrintableHeight() / node.getBoundsInParent().getHeight();
         node.getTransforms().add(new Scale(scaleX, scaleY));
@@ -4932,6 +5001,24 @@ public class HCRGen extends Application {
 		ImageIO.write(image, "png", new File(fileName));
 	}
     
+	/**PDF Document method
+	 * 
+	 */
+	public static void DocumentCreation(String args[])throws IOException{
+		//creating document object
+		PDDocument document = new PDDocument();
+		
+		//saving the document
+		document.save("c:/PdfBox_Examples/my_doc.pdf");
+		
+		System.out.println("PDF created");
+		
+		//closing the document
+		document.close();
+		
+	}
+	
+	
 	/**main method
 	 * @param args launch method
 	 */

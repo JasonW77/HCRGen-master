@@ -4,21 +4,37 @@
  *  HCRGen application for generating Hood Cleaning Reports (or HCRGen.java).
  * 	I created this program for Tong's Fire Extinguisher Sales and Service to help them move from paper reports to an all digital report system.
  * 
- * Version 2.0 adds the RFSSR class and the CustCrea class, this allows for a second report to be generated and the customer information to be saved.
+ * Version 2.0 changes:
+ * * A new report form the (RFSSR) Restaurant Fire System Service Report window has been added~
+ * * * the report for (RFSSR) Restaurant Fire System Service Report has been added~
+ * * The HCRGen start window, Customer Creation window, and Customer edit windows have been added.
+ * * * this allows for a choice in reports and the customer information edit/add windows to be selected.
+ * * the CusOb class has been added, this allows customer information to be saved.
+ * 
+ * Version 2.1 changes:
+ * * TechOb class and the Administration class, this allows:
+ * * multiple Technicians can now be created and saved.
+ * * * a technician pane has been added to edit this information.
+ * * business information is being moved to a file system.
+ * * * an Administration pane has been added to give the client a place to edit this information.
+ * * A search Function has been added to aid the client in searching for customer information.
+ * * * a search report window has been added to readout the search results.
  * 	 
  * 
 	<p>Date created 8/17/2020 <p/>
-	<p>Version 2.0 <p/>
+	<p>current Version release Date 10/9/2020 <p/>
+	<p>Version 2.1 <p/>
 	
 	@author Jason Waters
  */
+
 package HCRGen;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
 @SuppressWarnings("serial")
-public class CusOb  extends HCRGen implements Serializable{
+public class CusObV2  extends HCRGen implements Serializable{
 	
 	private String client;
 	private String address;
@@ -29,12 +45,12 @@ public class CusOb  extends HCRGen implements Serializable{
 	private String SSw;
 	private String SCM;
 	private String SF;
+	private String email;
 	private LocalDate LastHydro;
 	
-	/**
-	 * default object creation settings
+	/** default object creation settings
 	 */
-	public CusOb() {
+	public CusObV2() {
 		this.client = "";
 		this.address = "";
 		this.city = "";
@@ -44,14 +60,13 @@ public class CusOb  extends HCRGen implements Serializable{
 		this.SSw = "";
 		this.SCM = "";
 		this.SF = "";
+		this.email = "";
 		this.LastHydro = LocalDate.now();
 	}
 	
-	/**
-	 * object creation with specified parameters
+	/** object creation with specified parameters
 	 */
-	
-	public CusOb(String client,String address, String city, String state, String zip, String phone, String SSw, String SCM, String SF, LocalDate LastHydro) {
+	public CusObV2(String client,String address, String city, String state, String zip, String phone, String SSw, String SCM, String SF, String email, LocalDate LastHydro) {
 		this.client = client;
 		this.address = address;
 		this.city = city;
@@ -61,10 +76,11 @@ public class CusOb  extends HCRGen implements Serializable{
 		this.SSw = SSw;
 		this.SCM = SCM;
 		this.SF = SF;
+		this.email = email;
 		this.LastHydro = LastHydro;
 	}
-	/**
-	 * CusOb getters
+	
+	/** CusOb getters
 	 */
 	public String getClient() {
 		return this.client;
@@ -93,12 +109,14 @@ public class CusOb  extends HCRGen implements Serializable{
 	public String getSF() {
 		return this.SF;
 	}
+	public String getEmail() {
+		return this.email;
+	}
 	public LocalDate getLastHydro() {
 		return this.LastHydro;
 	}
 	
-	/**
-	 * CusOb setters
+	/** CusOb setters
 	 */
 	public String setClient(String client) {
 		return this.client = client;
@@ -126,6 +144,9 @@ public class CusOb  extends HCRGen implements Serializable{
 	}
 	public String setSF(String SF) {
 		return this.SF = SF;
+	}
+	public String setEmail(String email) {
+		return this.email = email;
 	}
 	public LocalDate setLastHydro(LocalDate LastHydro) {
 		return this.LastHydro = LastHydro;
